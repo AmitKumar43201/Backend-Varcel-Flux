@@ -6,16 +6,23 @@ import UserModel from "../models/user.js";
 dotenv.config()
 const redis_uri = process.env.REDIS_URI
 
-const io = new Server({cors: "*"})
-export function initSocket(){
+let io;
+
+export function initSocket(server){
+
+    io = new Server(server,{
+        cors:{
+            origin: true,
+            credentials: true
+        }
+    })
+
     io.on('connection', socket => {
     socket.on('subscribe', channel => {
         socket.join(channel)
         socket.emit('message', `joined ${channel}`)
         })
     })
-
-    io.listen(9001, () => {console.log(`Socket server started at Port: 9001`)})
 }
 
 const subscriber = new Redis(redis_uri)

@@ -1,4 +1,5 @@
 import express from 'express'
+import http from 'http'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -10,8 +11,9 @@ dotenv.config()
 
 import { initSocket, initRedisSubscribe } from './socketio/socketio.js'
 
-const PORT = 9000
+const PORT = process.env.PORT || 9000
 const app = express()
+const server = http.createServer(app)
 connectDB()
 
 app.use(express.json())
@@ -24,9 +26,9 @@ app.use(cors({
 app.use('/auth',router)
 app.use('/project', routes)
 
-initSocket()
+initSocket(server)
 await initRedisSubscribe()
 
 
 
-app.listen(PORT, () => {console.log(`Api-Server started at http://localhost:${PORT}`)})
+server.listen(PORT)
