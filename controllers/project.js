@@ -86,7 +86,7 @@ const createProject = async (req,res) => {
     await ecsClient.send(command)
 
     const user = await UserModel.findOne({ email })
-    const proj_url = `http://${projectSlug}.localhost:8000`
+    const proj_url = `https://my-proxy-app.varcel-flux.workers.dev/${projectSlug}`
     user.project = {
         name: projectName,
         git_url: githubUrl,
